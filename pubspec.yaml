@@ -1,6 +1,6 @@
 name: flutter_scale
 description: "A Flutter package for creating responsive applications that automatically adapt to different screen sizes, maintaining consistent proportions across devices."
-version: 0.0.1
+version: 1.0.0
 homepage: https://github.com/eduardohr-muniz/flutter_scale
 issue_tracker: https://github.com/eduardohr-muniz/flutter_scale/issues
 repository: https://github.com/eduardohr-muniz/flutter_scale
