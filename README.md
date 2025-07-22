@@ -1,181 +1,284 @@
-<<<<<<< HEAD
-# flutter_scale
-=======
-# Flutter Scale
+# 📱 Flutter Scale
 
-Um package Flutter para controlar a escala do app proporcionalmente em diferentes dispositivos como celular, tablet e TV.
+A powerful and simple Flutter package for creating responsive applications that automatically adapt to different screen sizes, maintaining consistent proportions across devices.
 
-## Características
+## ✨ Features
 
-- ✅ **Escala Automática**: Calcula automaticamente o fator de escala baseado em um tamanho de referência
-- ✅ **Escala Manual**: Permite ajustar manualmente o fator de escala em tempo real
-- ✅ **Reativo**: Sistema totalmente reativo usando ChangeNotifier
-- ✅ **Simples de usar**: Fácil integração com MaterialApp existente
-- ✅ **Extensions**: Extensions úteis para aplicar escala rapidamente
+- 🎯 **Auto Scale**: Automatically adapts based on reference resolution
+- 🎮 **Manual Control**: Allows manual scale adjustment (0.5x, 1x, 2x, etc.)
+- ⚡ **Reactive**: Real-time updates during resizing
+- 🔒 **Minimum Scale**: Never goes below 1.0x in automatic mode
+- 🚀 **Performance**: Optimized system with update threshold
+- 📦 **Simple**: Just 3 lines of code to implement
 
-## Como usar
+## 🚀 Installation
 
-### 1. Configuração básica
+Add to your `pubspec.yaml`:
 
-Envolva seu `MaterialApp` com o `ScaledApp`:
+```yaml
+dependencies:
+  flutter_scale: ^any
+```
+
+Run:
+
+```bash
+flutter pub get
+```
+
+## 💡 Basic Usage
+
+### 1. Wrap your MaterialApp
 
 ```dart
-import 'package:flutter/material.dart';
 import 'package:flutter_scale/flutter_scale.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+MaterialApp(
+  title: 'My App',
+  home: MyHomePage(),
+  builder: (context, child) => FlutterScale.builder(
+    context,
+    child,
+    type: ScaleType.dimension,                 // Auto scale
+    baseDimension: const Size(1366, 768),      // Reference resolution
+  ),
+)
+```
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+### 2. Access the Controller
 
+```dart
+class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ScaledApp(
-      // Define o tamanho de referência (exemplo: 1200x920)
-      referenceSize: const Size(1200, 920),
-      // Escala manual inicial (opcional)
-      initialManualScale: 1.0,
-      child: MaterialApp(
-        title: 'Meu App',
-        home: const HomePage(),
+    final controller = FlutterScale.of(context);
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Scale: ${controller.scale.toStringAsFixed(2)}x'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Switch to manual control
+            controller.changeToFactor(1.5);
+          },
+          child: Text('Change Scale'),
+        ),
       ),
     );
   }
 }
 ```
 
-### 2. Usando a extensão .scaled
+## 🎮 Scale Modes
 
-A forma mais fácil de aplicar escala aos seus valores:
+### 📐 Dimension (Automatic)
 
-```dart
-Container(
-  width: 200.scaled,      // Aplica escala automaticamente
-  height: 100.scaled,
-  padding: EdgeInsets.all(16.scaled),
-  child: Text(
-    'Texto escalado',
-    style: TextStyle(fontSize: 18.scaled),
-  ),
-)
-```
-
-### 3. Controlando a escala programaticamente
+Ideal for creating consistent experiences across different devices:
 
 ```dart
-// Mudar o tamanho de referência
-FlutterScale.instance.setReferenceSize(const Size(800, 600));
-
-// Ajustar escala manual
-FlutterScale.instance.setManualScaleFactor(1.5);
-
-// Incrementar/decrementar escala
-FlutterScale.instance.incrementScale(0.1);
-FlutterScale.instance.decrementScale(0.1);
-
-// Resetar escala manual
-FlutterScale.instance.resetManualScale();
+FlutterScale.builder(
+  context,
+  child,
+  type: ScaleType.dimension,
+  baseDimension: const Size(1920, 1080),  // Full HD base
+);
 ```
 
-### 4. Widget de controles (opcional)
+**How it works:**
+- **1920×1080 → 1.0x** (base scale)
+- **3840×2160 → 2.0x** (4K, doubles the size)
+- **960×540 → 1.0x** (never goes below 1.0x)
 
-Para debug ou configurações do usuário:
+### 🎛️ Factor (Manual)
+
+For precise scale control:
 
 ```dart
-// Adicione os controles em qualquer lugar do seu app
-const ScaleControls()
+FlutterScale.builder(
+  context,
+  child,
+  type: ScaleType.factor,
+  initialFactor: 1.2,  // 20% larger
+);
+
+// Change programmatically
+controller.changeFactor(2.0);  // 200%
 ```
 
-## Como funciona
+## 📋 Complete API
 
-O sistema funciona da seguinte forma:
-
-1. **Tamanho de referência**: Você define um tamanho base (ex: 1200x920)
-2. **Cálculo automático**: O sistema calcula a proporção da tela atual em relação ao tamanho de referência
-3. **Escala final**: `Escala Final = Escala Automática × Escala Manual`
-
-### Exemplo prático:
-
-- Referência: 1200x920 (fator base = 1.0)
-- Tela atual: 2400x1840 (fator automático = 2.0)
-- Escala manual: 1.0
-- **Resultado**: Escala final = 2.0
-
-Isso significa que um widget de 100px será renderizado como 200px na tela maior.
-
-## API Completa
-
-### FlutterScale.instance
+### Controller Methods
 
 ```dart
-// Propriedades
-double get scaleFactor           // Escala final (auto × manual)
-double get autoScaleFactor       // Escala calculada automaticamente
-double get manualScaleFactor     // Escala manual definida pelo usuário
-Size get referenceSize           // Tamanho de referência atual
+final controller = FlutterScale.of(context);
 
-// Métodos de configuração
-void setReferenceSize(Size size)
-void setManualScaleFactor(double factor)
-void incrementScale([double increment = 0.1])
-void decrementScale([double decrement = 0.1])
-void resetManualScale()
+// Getters
+controller.scale              // double: current scale
+controller.type               // ScaleType: current mode
+controller.getCurrentResolution()  // String: "1920×1080"
 
-// Métodos utilitários
-double scale(double value)
-EdgeInsets scaleEdgeInsets(EdgeInsets insets)
-Size scaleSize(Size size)
-BorderRadius scaleBorderRadius(BorderRadius radius)
-TextStyle scaleTextStyle(TextStyle style)
+// Mode switching
+controller.changeToFactor(1.5);
+controller.changeToDimension(const Size(1366, 768));
+
+// Adjustments
+controller.changeFactor(2.0);           // For factor mode
+controller.changeBaseDimension(size);   // For dimension mode
 ```
 
-### Extensions
+### Builder Configuration
 
 ```dart
-// Para números
-double scaledValue = 16.scaled;
-
-// Para widgets
-Widget scaledWidget = myWidget.scaled();
-Widget customScaledWidget = myWidget.scaled(1.5); // escala customizada
+FlutterScale.builder(
+  context,
+  child,
+  type: ScaleType.dimension,              // or ScaleType.factor
+  initialFactor: 1.0,                     // initial factor (factor mode)
+  baseDimension: const Size(1366, 768),   // base resolution (dimension mode)
+);
 ```
 
-## Casos de uso
+## 🎯 Use Cases
 
-### Celular para Tablet
+### 📱 Mobile App → 📺 TV
 ```dart
-// Referência de celular
-FlutterScale.instance.setReferenceSize(const Size(400, 800));
+// Mobile base
+baseDimension: const Size(375, 812),  // iPhone
+
+// Result:
+// iPhone (375×812) → 1.0x
+// iPad (768×1024) → 1.0x (smaller than base)
+// TV (1920×1080) → 2.4x (much larger)
 ```
 
-### Tablet para TV
+### 💻 Responsive Desktop App
 ```dart
-// Referência de tablet
-FlutterScale.instance.setReferenceSize(const Size(1200, 920));
+// Laptop base
+baseDimension: const Size(1366, 768),
+
+// Result:
+// Laptop (1366×768) → 1.0x
+// Full HD (1920×1080) → 1.4x
+// 4K (3840×2160) → 2.8x
 ```
 
-### App universal
+### 🎮 Dynamic UI Control
 ```dart
-// O usuário pode escolher o tamanho base que preferir
-// e o app se adapta automaticamente para qualquer tela
+// User choice buttons
+ElevatedButton(
+  onPressed: () => controller.changeToFactor(0.8),  // Compact
+  child: Text('Compact Mode'),
+),
+ElevatedButton(
+  onPressed: () => controller.changeToFactor(1.5),  // Large
+  child: Text('Large Mode'),
+),
 ```
 
-## Executar o exemplo
+## 🔧 Complete Example
 
-```bash
-cd example
-flutter run
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_scale/flutter_scale.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Scale Demo',
+      home: HomePage(),
+      builder: (context, child) => FlutterScale.builder(
+        context,
+        child,
+        type: ScaleType.dimension,
+        baseDimension: const Size(1366, 768),
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final controller = FlutterScale.of(context);
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Scale: ${controller.scale.toStringAsFixed(2)}x'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Resolution: ${controller.getCurrentResolution()}',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () => controller.changeToFactor(0.8),
+                  child: Text('Small'),
+                ),
+                ElevatedButton(
+                  onPressed: () => controller.changeToFactor(1.0),
+                  child: Text('Normal'),
+                ),
+                ElevatedButton(
+                  onPressed: () => controller.changeToFactor(1.5),
+                  child: Text('Large'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 ```
 
-O exemplo demonstra:
-- Informações da escala em tempo real
-- Controles para ajustar escala manualmente
-- Widgets escalados automaticamente
-- Botões para mudar entre diferentes tamanhos de referência
+## 🎨 Advanced Features
 
-## Licença
+### 🔄 Real-time Reactivity
+The package automatically detects screen size changes and updates the scale instantly.
 
-MIT License
->>>>>>> c432a35 (Initialize)
+### ⚡ Performance Optimization
+Threshold system prevents unnecessary rebuilds - only updates when difference is ≥ 0.05.
+
+### 🔒 Smart Limitation
+In `dimension` mode, scale never goes below 1.0x, preventing interfaces from becoming too small.
+
+### 📊 Debug Logs
+```dart
+// Console output example:
+📐 Scale Changed: 1.25x
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the project
+2. Create a branch for your feature
+3. Commit your changes
+4. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- [Complete Example](https://github.com/eduardohr-muniz/flutter_scale/tree/main/example)
+- [Issues](https://github.com/eduardohr-muniz/flutter_scale/issues)
+
+---
+
+**Flutter Scale** - Creating consistent responsive experiences! 🚀
