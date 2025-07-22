@@ -76,13 +76,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Scale Demo',
+      title: 'Auto Scale Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: const MyHomePage(),
-      builder: (context, child) => FlutterScale.builder(
+      builder: (context, child) => AutoScaleFlutter.builder(
         context,
         child,
         type: ScaleType.dimension,
@@ -111,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = FlutterScale.of(context);
+    final controller = AutoScaleFlutter.of(context);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Icon(Icons.aspect_ratio, size: 20),
             ),
             const SizedBox(width: 12),
-            const Text('Flutter Scale Demo', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Auto Scale Flutter Demo', style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -224,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Flutter Scale',
+            'Auto Scale Flutter',
             style: theme.textTheme.headlineMedium?.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -704,7 +704,7 @@ class CustomScaleControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = FlutterScale.of(context);
+    final controller = AutoScaleFlutter.of(context);
     final screenSize = MediaQuery.of(context).size;
     final theme = Theme.of(context);
 

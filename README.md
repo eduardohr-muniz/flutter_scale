@@ -1,4 +1,4 @@
-# 📱 Flutter Scale
+# 📱 Auto Scale Flutter
 
 A powerful and simple Flutter package for creating responsive applications that automatically adapt to different screen sizes, maintaining consistent proportions across devices.
 
@@ -36,7 +36,7 @@ import 'package:flutter_scale/flutter_scale.dart';
 MaterialApp(
   title: 'My App',
   home: MyHomePage(),
-  builder: (context, child) => FlutterScale.builder(
+  builder: (context, child) => AutoScaleFlutter.builder(
     context,
     child,
     type: ScaleType.dimension,                 // Auto scale
@@ -51,7 +51,7 @@ MaterialApp(
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final controller = FlutterScale.of(context);
+    final controller = AutoScaleFlutter.of(context);
     
     return Scaffold(
       appBar: AppBar(
@@ -78,7 +78,7 @@ class MyHomePage extends StatelessWidget {
 Ideal for creating consistent experiences across different devices:
 
 ```dart
-FlutterScale.builder(
+AutoScaleFlutter.builder(
   context,
   child,
   type: ScaleType.dimension,
@@ -96,7 +96,7 @@ FlutterScale.builder(
 For precise scale control:
 
 ```dart
-FlutterScale.builder(
+AutoScaleFlutter.builder(
   context,
   child,
   type: ScaleType.factor,
@@ -112,7 +112,7 @@ controller.changeFactor(2.0);  // 200%
 ### Controller Methods
 
 ```dart
-final controller = FlutterScale.of(context);
+final controller = AutoScaleFlutter.of(context);
 
 // Getters
 controller.scale              // double: current scale
@@ -131,7 +131,7 @@ controller.changeBaseDimension(size);   // For dimension mode
 ### Builder Configuration
 
 ```dart
-FlutterScale.builder(
+AutoScaleFlutter.builder(
   context,
   child,
   type: ScaleType.dimension,              // or ScaleType.factor
@@ -189,9 +189,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Scale Demo',
+      title: 'Auto Scale Flutter Demo',
       home: HomePage(),
-      builder: (context, child) => FlutterScale.builder(
+      builder: (context, child) => AutoScaleFlutter.builder(
         context,
         child,
         type: ScaleType.dimension,
@@ -204,7 +204,7 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final controller = FlutterScale.of(context);
+    final controller = AutoScaleFlutter.of(context);
     
     return Scaffold(
       appBar: AppBar(
@@ -281,4 +281,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Flutter Scale** - Creating consistent responsive experiences! 🚀
+**Auto Scale Flutter** - Creating consistent responsive experiences! 🚀

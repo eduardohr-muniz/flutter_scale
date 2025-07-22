@@ -19,7 +19,10 @@ class ScaleController extends ChangeNotifier {
   Size? _currentScreenSize;
   double? _lastNotifiedScale; // ✅ NOVO: Armazena a última escala notificada
 
-  ScaleController({required ScaleType type, double factor = 1.0, Size? baseDimension}) : _type = type, _factor = factor, _baseDimension = baseDimension;
+  ScaleController({required ScaleType type, double factor = 1.0, Size? baseDimension})
+      : _type = type,
+        _factor = factor,
+        _baseDimension = baseDimension;
 
   ScaleType get type => _type;
   double get factor => _factor;
@@ -126,39 +129,39 @@ class ScaleController extends ChangeNotifier {
 }
 
 /// InheritedWidget reativo para escala global
-class FlutterScale extends InheritedNotifier<ScaleController> {
-  const FlutterScale._({required ScaleController controller, required super.child}) : super(notifier: controller);
+class AutoScaleFlutter extends InheritedNotifier<ScaleController> {
+  const AutoScaleFlutter._({required ScaleController controller, required super.child}) : super(notifier: controller);
 
   /// Acessa o controller de escala
   static ScaleController of(BuildContext context) {
-    final FlutterScale? inherited = context.dependOnInheritedWidgetOfExactType<FlutterScale>();
-    assert(inherited != null, 'FlutterScale não encontrado. Use FlutterScale.builder no MaterialApp');
+    final AutoScaleFlutter? inherited = context.dependOnInheritedWidgetOfExactType<AutoScaleFlutter>();
+    assert(inherited != null, 'AutoScaleFlutter não encontrado. Use AutoScaleFlutter.builder no MaterialApp');
     return inherited!.notifier!;
   }
 
   /// Builder para aplicar a escala no widget - gerencia tudo internamente
   static Widget builder(BuildContext context, Widget? child, {ScaleType type = ScaleType.factor, double initialFactor = 1.0, Size? baseDimension}) {
-    return _FlutterScaleRoot(type: type, initialFactor: initialFactor, baseDimension: baseDimension, child: child ?? const SizedBox.shrink());
+    return _AutoScaleFlutterRoot(type: type, initialFactor: initialFactor, baseDimension: baseDimension, child: child ?? const SizedBox.shrink());
   }
 
   @override
-  bool updateShouldNotify(FlutterScale oldWidget) => notifier != oldWidget.notifier;
+  bool updateShouldNotify(AutoScaleFlutter oldWidget) => notifier != oldWidget.notifier;
 }
 
 /// Widget interno que gerencia o controller e aplica a escala
-class _FlutterScaleRoot extends StatefulWidget {
+class _AutoScaleFlutterRoot extends StatefulWidget {
   final ScaleType type;
   final double initialFactor;
   final Size? baseDimension;
   final Widget child;
 
-  const _FlutterScaleRoot({required this.type, required this.initialFactor, this.baseDimension, required this.child});
+  const _AutoScaleFlutterRoot({required this.type, required this.initialFactor, this.baseDimension, required this.child});
 
   @override
-  State<_FlutterScaleRoot> createState() => _FlutterScaleRootState();
+  State<_AutoScaleFlutterRoot> createState() => _AutoScaleFlutterRootState();
 }
 
-class _FlutterScaleRootState extends State<_FlutterScaleRoot> {
+class _AutoScaleFlutterRootState extends State<_AutoScaleFlutterRoot> {
   late ScaleController _controller;
 
   @override
@@ -181,7 +184,7 @@ class _FlutterScaleRootState extends State<_FlutterScaleRoot> {
     // Atualiza o tamanho da tela no controller imediatamente (reativo)
     _controller.updateScreenSize(screenSize);
 
-    return FlutterScale._(
+    return AutoScaleFlutter._(
       controller: _controller,
       child: AnimatedBuilder(
         animation: _controller,

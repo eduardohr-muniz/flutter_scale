@@ -1,6 +1,6 @@
-## 1.0.0
+## 1.0.0+2
 
-* **Initial Flutter Scale Release** - A powerful and simple Flutter package for creating responsive applications that automatically adapt to different screen sizes, maintaining consistent proportions across devices.
+* **Initial Auto Scale Flutter Release** - A powerful and simple Flutter package for creating responsive applications that automatically adapt to different screen sizes, maintaining consistent proportions across devices.
 
 ### ✨ Key Features:
 - **Auto Scale**: Automatically adapts based on reference resolution
